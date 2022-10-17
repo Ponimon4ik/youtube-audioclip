@@ -1,8 +1,9 @@
 import os
 
 from moviepy.editor import AudioFileClip
-from pytube import YouTube
+from pytube import YouTube, exceptions
 
+import logger
 from src.bot.exceptions import InvalidLinkError, SizeTooLargeError
 from src.core.settings import BUFFER_SIZE, DOWNLOAD_PATH, MAX_FILE_SIZE
 
@@ -21,8 +22,10 @@ def get_stream(link):
         return stream
     except SizeTooLargeError as mistake:
         raise mistake
-    except Exception:
+    except exceptions.RegexMatchError:
         raise InvalidLinkError
+    except Exception as mistake:
+        logger.bot_problems(mistake)
 
 
 def convert_mp4_to_mp3(mp4_file_name):

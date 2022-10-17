@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apt-get update
 RUN apt -y install ffmpeg
 
-ENV TELEGRAM_TOKEN telegram_token
+ENV TELEGRAM_TOKEN bot_token
 
 COPY requirements.txt /app
 
