@@ -9,7 +9,7 @@ from src.core.settings import WRITE_TIMEOUT
 
 async def job_send_audio(context: CallbackContext):
     link = context.job.data
-    username = context.job.job_kwargs['user']
+    username = context.job.job_kwargs['username']
     logger.bot_got_link(link, username)
     try:
         stream = get_stream(link)
