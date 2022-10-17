@@ -11,9 +11,11 @@ async def get_link(update: Update, context: CallbackContext):
     context.job_queue.run_once(
         job_send_audio,
         when=1,
-        data=update.message.text,
+        data={
+            'link': update.message.text,
+            'username': username
+        },
         chat_id=update.effective_chat.id,
-        job_kwargs={'username': username}
     )
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
