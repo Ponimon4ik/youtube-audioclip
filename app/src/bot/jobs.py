@@ -1,7 +1,7 @@
 from telegram.ext import CallbackContext
 
 import logger
-from src.bot.exceptions import InvalidLinkError, SizeTooLargeError
+from src.bot import exceptions
 from src.bot.services import (convert_mp4_to_mp3, get_stream,
                               remove_mp4_and_mp3_file)
 from src.core.settings import WRITE_TIMEOUT
@@ -22,14 +22,12 @@ async def job_send_audio(context: CallbackContext):
         )
         logger.bot_sent_audio_file(name_file, username)
         remove_mp4_and_mp3_file(name_file)
-    except InvalidLinkError as mistake:
-        message = mistake.message
-        await context.bot.send_message(
-            chat_id=context.job.chat_id,
-            text=message
-        )
-        logger.bot_sent_message(message, username)
-    except SizeTooLargeError as mistake:
+    except (
+            exceptions.InvalidLinkError,
+            exceptions.SizeTooLargeError,
+            exceptions.AgeRestrictedError,
+            exceptions.UnexpectedError
+    ) as mistake:
         message = mistake.message
         await context.bot.send_message(
             chat_id=context.job.chat_id,

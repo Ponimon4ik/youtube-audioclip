@@ -1,31 +1,52 @@
 import os
+import re
 
 from moviepy.editor import AudioFileClip
-from pytube import YouTube, exceptions
+from pytube import YouTube
 
 import logger
-from src.bot.exceptions import InvalidLinkError, SizeTooLargeError
+from src.bot import exceptions
 from src.core.settings import BUFFER_SIZE, DOWNLOAD_PATH, MAX_FILE_SIZE
+
+
+def validate_link(link):
+    regex = re.compile(
+        r"(?:v=|\/)([0-9A-Za-z_-]{11}).*"
+    )
+    results = regex.search(link)
+    if not results:
+        raise exceptions.InvalidLinkError
 
 
 def validate_size_stream(stream):
     stream_size = stream.filesize
     if stream_size > MAX_FILE_SIZE:
-        raise SizeTooLargeError(stream_size)
+        raise exceptions.SizeTooLargeError(stream_size)
+
+
+def validate_age_restricted(youtube):
+    if youtube.age_restricted:
+        raise exceptions.AgeRestrictedError
 
 
 def get_stream(link):
     try:
-        stream = YouTube(link).streams.get_audio_only()
+        validate_link(link)
+        youtube = YouTube(link)
+        validate_age_restricted(youtube)
+        stream = youtube.streams.get_audio_only()
         validate_size_stream(stream)
         stream.download(output_path=DOWNLOAD_PATH)
         return stream
-    except SizeTooLargeError as mistake:
+    except (
+            exceptions.InvalidLinkError,
+            exceptions.AgeRestrictedError,
+            exceptions.SizeTooLargeError,
+    ) as mistake:
         raise mistake
-    except exceptions.RegexMatchError:
-        raise InvalidLinkError
     except Exception as mistake:
         logger.bot_problems(mistake)
+        raise exceptions.UnexpectedError
 
 
 def convert_mp4_to_mp3(mp4_file_name):

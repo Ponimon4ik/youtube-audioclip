@@ -1,6 +1,5 @@
 import logging
 
-
 LOG_BOT_STARTED = 'Бот запущен'
 LOG_BOT_PROBLEMS = 'При работе Бота возникла ошибка: {mistake}'
 LOG_SENT_MESSAGE = 'Пользователю {user} отправлено сообщение: "{message}"'
