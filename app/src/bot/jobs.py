@@ -9,7 +9,8 @@ from src.core.settings import WRITE_TIMEOUT
 
 async def job_send_audio(context: CallbackContext):
     link = context.job.data
-    logger.bot_got_link(link)
+    username = context.job.job_kwargs['user']
+    logger.bot_got_link(link, username)
     try:
         stream = get_stream(link)
         name_file = stream.default_filename.split('.mp4')[0]
@@ -19,7 +20,7 @@ async def job_send_audio(context: CallbackContext):
             audio=open(mp3_file, 'rb'),
             write_timeout=WRITE_TIMEOUT
         )
-        logger.bot_sent_audio_file(name_file)
+        logger.bot_sent_audio_file(name_file, username)
         remove_mp4_and_mp3_file(name_file)
     except InvalidLinkError as mistake:
         message = mistake.message
@@ -27,11 +28,11 @@ async def job_send_audio(context: CallbackContext):
             chat_id=context.job.chat_id,
             text=message
         )
-        logger.bot_sent_message(message)
+        logger.bot_sent_message(message, username)
     except SizeTooLargeError as mistake:
         message = mistake.message
         await context.bot.send_message(
             chat_id=context.job.chat_id,
             text=message
         )
-        logger.bot_sent_message(message)
+        logger.bot_sent_message(message, username)

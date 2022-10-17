@@ -3,9 +3,9 @@ import logging
 
 LOG_BOT_STARTED = 'Бот запущен'
 LOG_BOT_PROBLEMS = 'При работе Бота возникла ошибка: {mistake}'
-LOG_SENT_MESSAGE = 'Отправлено сообщение: "{message}"'
-LOG_SENT_AUDIO_FILE = 'Отправлено аудио файл: "{file_name}"'
-LOG_GOT_LINK = 'Получена ссылка: "{link}"'
+LOG_SENT_MESSAGE = 'Пользователю {user} отправлено сообщение: "{message}"'
+LOG_SENT_AUDIO_FILE = 'Пользователю {user} отправлен аудио файл: "{file_name}"'
+LOG_GOT_LINK = 'От пользователя {user} получена ссылка: "{link}"'
 
 
 logger = logging.getLogger(__name__)
@@ -23,19 +23,28 @@ def bot_problems(mistake):
     )
 
 
-def bot_sent_message(message):
+def bot_sent_message(message, user):
     logger.info(
-        LOG_SENT_MESSAGE.format(message=message),
+        LOG_SENT_MESSAGE.format(
+            user=user,
+            message=message
+        ),
     )
 
 
-def bot_got_link(link):
+def bot_got_link(link, user):
     logger.info(
-        LOG_GOT_LINK.format(link=link)
+        LOG_GOT_LINK.format(
+            user=user,
+            link=link
+        )
     )
 
 
-def bot_sent_audio_file(file_name):
+def bot_sent_audio_file(file_name, user):
     logger.info(
-        LOG_SENT_AUDIO_FILE.format(file_name=file_name)
+        LOG_SENT_AUDIO_FILE.format(
+            user=user,
+            file_name=file_name
+        )
     )
