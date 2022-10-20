@@ -10,6 +10,7 @@ LOG_GOT_LINK = 'От пользователя {user} получена ссылк
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
+logger.addHandler(logging.FileHandler(__file__ + '.log'))
 
 
 def bot_started():

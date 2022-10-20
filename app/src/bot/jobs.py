@@ -26,7 +26,8 @@ async def job_send_audio(context: CallbackContext):
             exceptions.InvalidLinkError,
             exceptions.SizeTooLargeError,
             exceptions.AgeRestrictedError,
-            exceptions.UnexpectedError
+            exceptions.UnexpectedError,
+            exceptions.LiveStreamError
     ) as mistake:
         message = mistake.message
         await context.bot.send_message(
