@@ -5,12 +5,12 @@
 из интересных музыкальных клипов на YouTube. 
 
 
-# Используемые технологии:
+### Используемые технологии:
 
-Python
-Python-telegram-bot
-Pytube
-Moviepy
++ Python
++ Python-telegram-bot
++ Pytube
++ Moviepy
 
 
 ## Переменные окружения:
